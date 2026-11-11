@@ -1,0 +1,40 @@
+{
+  "name": "launcher-lolidle",
+  "version": "1.1.0",
+  "description": "Launcher leve para rodar até 5 contas do LoL Idle numa janela, com painel de farm, calculadora de build e radar de mercado — 100% local, sem automação no jogo.",
+  "author": "Launcher LoL Idle contributors",
+  "license": "MIT",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  },
+  "allowScripts": {
+    "electron@44.10.2": true
+  },
+  "build": {
+    "appId": "io.github.launcher.lolidle",
+    "productName": "Launcher LoL Idle",
+    "executableName": "Launcher LoL Idle",
+    "icon": "src/assets/icon.png",
+    "files": [
+      "src/**/*",
+      "!src/demo/**",
+      "package.json"
+    ],
+    "compression": "maximum",
+    "win": {
+      "target": "portable",
+      "icon": "src/assets/icon.png",
+      "signExecutable": false
+    },
+    "portable": {
+      "artifactName": "Launcher LoL Idle.exe"
+    }
+  }
+}

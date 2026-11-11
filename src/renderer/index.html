@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Launcher LoL Idle</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="toolbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div class="brand-txt"><span class="brand-t">LoL Idle</span><span class="brand-s">Launcher</span></div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="accounts" data-tip="Quantas contas rodar ao mesmo tempo (o jogo permite até 5 na mesma rede). Conta desligada não usa memória.">
+    <i data-icon="users"></i>
+    <div class="seg" id="seg-count">
+      <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button><button data-n="5">5</button>
+      <span class="seg-thumb"></span>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric" data-tip="XP por hora somado das contas (média dos últimos 10 min)">
+      <i data-icon="trend"></i><div><span class="metric-v" id="st-xph">—</span><span class="metric-l">XP/h total</span></div>
+    </div>
+    <button class="metric btn-metric" id="st-tarefas-btn" data-tip="Contas com a tarefa do Capitão da Legião pronta. Clique para ir à primeira.">
+      <i data-icon="scroll"></i><div><span class="metric-v" id="st-tarefas">0</span><span class="metric-l">tarefas prontas</span></div>
+    </button>
+    <div class="metric" data-tip="Memória RAM usada pelo launcher inteiro">
+      <i data-icon="cpu"></i><div><span class="metric-v" id="st-ram">—</span><span class="metric-l">memória</span></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <nav class="tools-bar">
+    <button class="tbtn" id="btn-radar" data-tip="Radar do mercado: avisa quando um item da sua lista aparece barato. A compra é você quem faz."><i data-icon="radar"></i><span>Radar</span><b class="badge" id="radar-badge" hidden>0</b></button>
+    <button class="tbtn accent" id="btn-build" data-tip="Calculadora de build da conta em foco (ou da primeira online), com as fórmulas do jogo"><i data-icon="sword"></i><span>Build</span></button>
+    <button class="tbtn" id="btn-reload-all" data-tip="Recarrega todas as contas (o jogo salva ao fechar)"><i data-icon="reload"></i><span>Atualizar</span></button>
+    <button class="tbtn" id="btn-mute-all" data-tip="Liga/desliga o som de todas as contas"><i data-icon="volume"></i><span>Som</span></button>
+    <div class="pop-host">
+      <button class="tbtn icon-only" data-pop="pop-cfg" data-tip="Ajustes"><i data-icon="sliders"></i></button>
+      <div class="pop right" id="pop-cfg">
+        <div class="pop-title">Ajustes</div>
+        <div class="list">
+          <label class="item"><div><b>Desempenho leve do jogo</b><small>Liga o "Desempenho: leve" do próprio jogo em todas as contas ao abrir. Menos CPU e RAM.</small></div><input type="checkbox" id="cfg-leve" class="switch"></label>
+          <label class="item"><div><b>Aceleração de vídeo (GPU)</b><small>Desligada (padrão): ~380 MB a menos; o mapa usa um pouco mais de CPU. Ligue se o mapa ficar lento. Vale ao reabrir o launcher.</small></div><input type="checkbox" id="cfg-gpu" class="switch"></label>
+          <label class="item"><div><b>Bloquear rastreadores</b><small>Corta analytics da página (Cloudflare Insights etc.). Vale ao reabrir o launcher.</small></div><input type="checkbox" id="cfg-track" class="switch"></label>
+          <label class="item"><div><b>Notificações do Windows</b><small>Tarefa pronta, captcha pedido, conta sem salvar e achados do radar</small></div><input type="checkbox" id="cfg-notify" class="switch"></label>
+          <label class="item"><div><b>Som dos alertas</b><small>Um toque curto quando algo precisa de você</small></div><input type="checkbox" id="cfg-beep" class="switch"></label>
+          <label class="item"><div><b>Farmar com o Windows bloqueado</b><small>Win+L não deixa o PC entrar em espera sozinho (a tela apaga normalmente)</small></div><input type="checkbox" id="cfg-lock" class="switch"></label>
+          <label class="item"><div><b>Não deixar o PC dormir</b><small>O LoL Idle caça no navegador: PC dormindo = nenhuma conta farmando</small></div><input type="checkbox" id="cfg-awake" class="switch"></label>
+          <label class="item"><div><b>Vigiar XP parado</b><small>Se o XP subia e parou há 15 min (e você não está mexendo na conta), recarrega</small></div><input type="checkbox" id="cfg-watch" class="switch"></label>
+          <label class="item"><div><b>Layout</b><small>Como as contas ficam na janela</small></div>
+            <select id="cfg-layout"><option value="auto">Automático</option><option value="row">Lado a lado</option><option value="col">Empilhado</option></select></label>
+          <label class="item"><div><b>Reiniciar conta pesada</b><small>Recarrega a conta que passar do limite de RAM</small></div>
+            <select id="cfg-ram"><option value="0">Nunca</option><option value="800">800 MB</option><option value="1200">1,2 GB</option><option value="1500">1,5 GB</option><option value="2000">2 GB</option></select></label>
+          <label class="item"><div><b>Atualização preventiva</b><small>F5 em cada conta de tempos em tempos, só se você não estiver mexendo nela</small></div>
+            <select id="cfg-refresh"><option value="0">Nunca</option><option value="3">A cada 3 h</option><option value="6">A cada 6 h</option><option value="12">A cada 12 h</option></select></label>
+        </div>
+        <div class="pop-actions">
+          <button class="pbtn gold" id="btn-leve" data-tip="3 contas, Modo economia do jogo em todas (a caça continua, o mapa não é desenhado) e sem GPU"><i data-icon="leaf"></i>Modo leve</button>
+        </div>
+        <div class="pop-actions">
+          <button class="pbtn" id="btn-eco-all"><i data-icon="leaf"></i>Modo economia em todas</button>
+          <button class="pbtn" id="btn-eco-none"><i data-icon="map"></i>Cena em todas</button>
+        </div>
+        <div class="pop-foot">O launcher só mostra as contas e lê a tela. Ele não clica, não digita e não mexe na conexão do jogo (Termos de Uso, item 10.1).</div>
+      </div>
+    </div>
+  </nav>
+  <div class="wc-space"></div>
+</header>
+
+<main id="grid"></main>
+
+<aside id="drawer" hidden>
+  <div class="drawer-head">
+    <div class="drawer-title"><i data-icon="radar" id="drawer-icon"></i><span id="drawer-t">—</span></div>
+    <button class="ibtn" id="drawer-close" data-tip="Fechar (Esc)"><i data-icon="x"></i></button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<div id="toast"></div>
+
+<template id="panel-tpl">
+  <section class="card">
+    <div class="card-head">
+      <div class="who">
+        <span class="dot"></span>
+        <input class="name" spellcheck="false" maxlength="20" data-tip="Clique para renomear">
+        <span class="chip camp"></span>
+        <span class="chip lvl"></span>
+      </div>
+      <div class="stats">
+        <span class="stat xp" data-tip="Progresso até o próximo nível"><span class="xp-bar"><span></span></span><b>—</b></span>
+        <span class="stat xph" data-tip="XP por hora (últimos 10 min) · tempo até o próximo nível"><b>—</b><small></small></span>
+        <span class="stat gold" data-tip="Ouro"><i data-icon="coins"></i><b>—</b></span>
+        <span class="stat zona" data-tip="Onde a conta está"></span>
+      </div>
+      <div class="spacer"></div>
+      <span class="flag tarefa" data-tip="Tarefa do Capitão da Legião" hidden></span>
+      <span class="flag warn" hidden></span>
+      <span class="ram" data-tip="Memória desta conta"></span>
+      <div class="ctrls">
+        <button class="ibtn build" data-tip="Calcular a melhor build desta conta"><i data-icon="sword"></i></button>
+        <button class="ibtn eco" data-tip="Modo economia do jogo (sem desenhar o mapa; a caça continua). Recarrega a conta."><i data-icon="leaf"></i></button>
+        <button class="ibtn mute" data-tip="Som desta conta"><i data-icon="volume"></i></button>
+        <div class="stepper">
+          <button class="zout" data-tip="Diminuir zoom"><i data-icon="minus"></i></button>
+          <button class="zv" data-tip="Zoom automático">—</button>
+          <button class="zin" data-tip="Aumentar zoom"><i data-icon="plus"></i></button>
+        </div>
+        <button class="ibtn reload" data-tip="Recarregar esta conta"><i data-icon="reload"></i></button>
+        <button class="ibtn focus" data-tip="Ver esta conta grande (as outras continuam farmando)"><i data-icon="expand"></i></button>
+      </div>
+    </div>
+    <div class="card-body"></div>
+  </section>
+</template>
+
+<script src="icons.js"></script>
+<script src="renderer.js"></script>
+<script src="radar.js"></script>
+<script src="build.js"></script>
+</body>
+</html>
