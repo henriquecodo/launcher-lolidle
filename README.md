@@ -37,7 +37,7 @@ O **Launcher LoL Idle** junta tudo em **uma janela**: cada conta roda isolada no
 
 ## ⬇ Download
 
-1. Baixe **`Launcher LoL Idle.exe`** na página de [**Releases**](../../releases/latest).
+1. Baixe **`Launcher.LoL.Idle.exe`** na página de [**Releases**](../../releases/latest).
 2. Dê dois cliques. É portátil: não instala nada.
 3. Entre em cada conta no seu card (e-mail e senha, ou Google). O login fica guardado.
 
